@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/camiloa17/gowebapp/pkg/config"
+	"github.com/camiloa17/gowebapp/pkg/models"
 )
 
 //var templateCache = make(map[string]*template.Template)
@@ -19,7 +20,12 @@ func NewTemplates(appConfig *config.AppConfig) {
 	app = appConfig
 }
 
-func RenderTemplate(responseWriter http.ResponseWriter, templateName string) {
+// AddDefaultData returns default data we want on every page
+func AddDefaultData(templateDate *models.TemplateData) *models.TemplateData {
+	return templateDate
+}
+
+func RenderTemplate(responseWriter http.ResponseWriter, templateName string, templateData *models.TemplateData) {
 	var templateCache map[string]*template.Template
 
 	if app.UseCache {
@@ -45,7 +51,9 @@ func RenderTemplate(responseWriter http.ResponseWriter, templateName string) {
 
 	buf := new(bytes.Buffer)
 
-	err := template.Execute(buf, nil)
+	templateData = AddDefaultData(templateData)
+
+	err := template.Execute(buf, templateData)
 
 	if err != nil {
 		log.Println(err)

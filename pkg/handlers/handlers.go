@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/camiloa17/gowebapp/pkg/config"
+	"github.com/camiloa17/gowebapp/pkg/models"
 	"github.com/camiloa17/gowebapp/pkg/render"
 )
 
@@ -30,10 +31,13 @@ func NewHandlers(repository *Repository) {
 // Home is the home page handler
 func (repo *Repository) Home(responseWriter http.ResponseWriter, request *http.Request) {
 
-	render.RenderTemplate(responseWriter, "home.page.gohtml")
+	render.RenderTemplate(responseWriter, "home.page.gohtml", &models.TemplateData{})
 }
 
 // About is the about page handler
 func (repo *Repository) About(responseWriter http.ResponseWriter, request *http.Request) {
-	render.RenderTemplate(responseWriter, "about.page.gohtml")
+	// perform some logic
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hello again"
+	render.RenderTemplate(responseWriter, "about.page.gohtml", &models.TemplateData{StringMap: stringMap})
 }
