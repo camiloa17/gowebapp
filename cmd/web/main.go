@@ -3,7 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/camiloa17/gowebapp/pkg/config"
 	"github.com/camiloa17/gowebapp/pkg/handlers"
 	"github.com/camiloa17/gowebapp/pkg/render"
@@ -11,10 +13,21 @@ import (
 
 const portNumber = ":8080"
 
+var app config.AppConfig
+var session *scs.SessionManager
+
 // main is the main application handler
 func main() {
-	var app config.AppConfig
+	// change this to true when in production
+	app.InProduction = false
 
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
 	templateCache, err := render.CreateTemplateCache()
 
 	if err != nil {

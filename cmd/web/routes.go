@@ -29,6 +29,7 @@ func routes(app *config.AppConfig) http.Handler {
 	}))
 
 	mux.Use(NoSurf)
+	mux.Use(SessionLoad)
 	mux.Use(middleware.Heartbeat("/ping"))
 	mux.Use(middleware.Recoverer)
 
